@@ -37,6 +37,11 @@
 
 在存在“类间重叠”的情况下，这种随机插值暴露出明显的缺陷。由于异常样本的边界靠近正常样本密集区，随机生成的合成异常样本极容易落入正常样本的区域内（即所谓的“危险区域”）。这会产生带有错误标签的噪声数据，不仅无法提升模型的诊断性能，反而会误导分类器的训练。
 
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/ddb83eef-4957-456d-8805-bcef47bf7752" width=50%/>
+  <p><em>图1 传统重采样方法与本文混合重采样方法的二维数据分布对比</em></p>
+</div>
+
 ## 3. DA-SMOTE-ED 方法原理解析
 
 为解决上述问题，论文提出了一种混合重采样框架——基于编解码器与深度注意力的SMOTE方法（DA-SMOTE-ED）。该方法主要由三个核心模块构成。
@@ -51,7 +56,17 @@
 
 该网络的功能是将原始数据映射到一个具备更高可分性的特征空间中。在模型训练过程中，引入了重构损失（保持原始信息不丢失）与三元组中心损失（Triplet-Center loss）。三元组中心损失的作用是将属于同一类的样本拉近，并将不同类的样本推远。经过映射后，正常样本与异常样本在新的特征空间中被有效隔离开，大幅缩小了合成样本落入“危险区域”的概率。
 
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/bdeee3b0-8279-42ba-ac0e-282c782afb3e" width=50%/>
+  <p><em>图2 三元组中心损失（Triplet-Center loss）在特征空间中的作用示意图</em></p>
+</div>
+
 ### 3.3 深度注意力引导的自适应插值生成
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/f95e3cd3-56fc-494f-ad7a-b5adb345ae7d" width=50%/>
+  <p><em>图3 DA-SMOTE-ED 的网络架构与核心注意力模块</em></p>
+</div>
 
 在可分的特征空间中，数据增强模块（DA-SMOTE）开始生成新的异常样本。
 
